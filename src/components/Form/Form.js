@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux'
 import contactActions from '../../redux/phonebook-actions';
+import { contactsOperations } from '../../redux';
 import styles from './form.module.css';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -13,8 +14,11 @@ export default function Form({ option }) {
 
     const handleSubmit = evt => {
         evt.preventDefault();
+        const id = uuidv4();
+        const newContact = { id, name, number };
 
-        dispatch(contactActions.addContact({ name, number }));
+        dispatch(contactActions.addContact(newContact));
+        dispatch(contactsOperations.postContacts(newContact));
 
         setName('');
         setNumber('');      
@@ -52,7 +56,7 @@ export default function Form({ option }) {
                     value={name}
                     onChange={handleChange}
                     pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-                    title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
+                    title="The name can only consist of letters, apostrophes, dashes and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan etc."
                     required
                 />
             <label htmlFor={inputId} className={styles.formLabel}>Number</label>
@@ -65,7 +69,7 @@ export default function Form({ option }) {
                     value={number}
                     onChange={handleChange}
                     pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-                    title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
+                    title="The phone number must be digits and can contain spaces, dashes and should start with +"
                     required
                 />
             
